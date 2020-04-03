@@ -22,7 +22,6 @@ const fse = require('fs-extra');
 const flip = require('gulp-css-flip');
 const gulp = require('gulp');
 const path = require('path');
-const sass = require('gulp-sass');
 const streamqueue = require('streamqueue');
 const util = require('gulp-util');
 
@@ -341,40 +340,6 @@ gulp.task('build-esm', gulp.series(
     () => makeDefaultFile('esm')
 ));
 
-/**
- * Builds the CSS for FirebaseUI.
- * @param {boolean} isRtl Whether to build in right-to-left mode.
- * @return {*} A stream that finishes when compilation finishes.
- */
-function buildCss(isRtl) {
-  const mdlSrcs = gulp.src('stylesheet/mdl.scss')
-      .pipe(sass.sync().on('error', sass.logError))
-      .pipe(cssInlineImages({
-        webRoot: 'node_modules/material-design-lite/src',
-      }));
-  const dialogPolyfillSrcs = gulp.src(
-      'node_modules/dialog-polyfill/dialog-polyfill.css');
-  let firebaseSrcs = gulp.src('stylesheet/*.css');
-
-  // Flip left/right, ltr/rtl for RTL languages.
-  if (isRtl) {
-    firebaseSrcs = firebaseSrcs.pipe(flip.gulp());
-  }
-
-  const outFile = isRtl ? 'firebaseui-rtl.css' : 'firebaseui.css';
-  return streamqueue({objectMode: true},
-      mdlSrcs, dialogPolyfillSrcs, firebaseSrcs)
-      .pipe(concatCSS(outFile))
-      .pipe(cleanCSS())
-      .pipe(gulp.dest(DEST_DIR));
-}
-
-// Concatenates and minifies the CSS sources for LTR languages.
-gulp.task('build-css', () => buildCss(false));
-
-// Concatenates and minifies the CSS sources for RTL languages.
-gulp.task('build-css-rtl', () => buildCss(true));
-
 // Creates a webserver that serves all files from the root of the package.
 gulp.task('serve', () => {
   connect.server({
@@ -388,13 +353,13 @@ gulp.task('clean', () => fse.remove(TMP_DIR));
 // Executes the basic tasks for the default language.
 gulp.task('default', gulp.series(
     'build-externs', 'build-ts', 'build-js',
-    'build-npm', 'build-esm', 'build-css', 'build-css-rtl',
+    'build-npm', 'build-esm',
     'clean'
 ));
 
 // Builds everything (JS for all languages, both LTR and RTL CSS).
 gulp.task('build-all', gulp.series(
     'build-externs', 'build-ts', 'build-all-js',
-    'build-npm', 'build-esm', 'build-css', 'build-css-rtl',
+    'build-npm', 'build-esm',
     'clean'
 ));

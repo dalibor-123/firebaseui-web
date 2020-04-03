@@ -3,7 +3,7 @@
   "version": "4.5.0",
   "description": "Javascript library for customizable UI on top of Firebase SDK",
   "files": [
-    "dist/firebaseui.js",
+    "dist/firebaseui__cs.js",
     "dist/firebaseui.css",
     "dist/npm.js",
     "dist/esm.js",
@@ -52,7 +52,6 @@
     "gulp-connect": "^5.5.0",
     "gulp-css-flip": "^0.4.0",
     "gulp-css-inline-images": "^0.1.1",
-    "gulp-sass": "^2.3.2",
     "gulp-util": "^3.0.7",
     "protractor": "^5.3.2",
     "streamqueue": "^1.1.1"

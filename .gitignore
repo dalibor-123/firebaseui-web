@@ -5,6 +5,9 @@ node_modules/
 generated/
 out/
 
+!dist/npm__cs.js
+!dist/esm__cs.js
+
 # Generated files.
 *.log
 *.pyc
